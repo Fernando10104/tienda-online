@@ -1,13 +1,17 @@
+import { useState } from 'react'
 
 import './App.css'
-import Product from './component/productos.jsx'
+import Products from './component/productos.jsx'
+
 
 function App() {
-  
+
+
 
   return (
     <>
-      <Product/>
+
+      <Products />
     </>
   )
 }

@@ -1,6 +1,8 @@
 import { useState , useEffect } from 'react'
+import { Filtros } from './filtros'
+import Fuse from 'fuse.js';
 
-function Product() {
+function Products() {
     const [productos, setProductos] = useState([])
 
     useEffect(() => {
@@ -13,24 +15,55 @@ function Product() {
             .catch((error) => console.error('Error fetching data:', error))
     }, [])
     
+
+ 
+    const [filtros, setFiltros] = useState({
+      categoria: 'all',
+      minprecio: 0
+    })
+    console.log(filtros, 'filtros')
+    console.log(productos, 'productos')
+
+    const productosfiltrados = (productos) => {
+        const fuse = new Fuse(productos, {
+          keys: ['nombre'],
+          threshold: 0.3,
+          includeScore: true,
+        });
+
+        const searchResults = filtros.busqueda ? fuse.search(filtros.busqueda).map(result => result.item) : productos;
+
+        return searchResults.filter(producto => 
+          producto.precio >= filtros.minprecio && 
+          (
+            filtros.categoria === 'all' || 
+            producto.categoria.toLowerCase() === filtros.categoria.toLowerCase()
+          )
+        );
+    }
+  
+    const productosyafiltrados = productosfiltrados(productos)
     return (
-            <main className="bg-gray-100 min-h-screen p-6">
-              <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Productos</h1>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {productos.slice(0, 20).map((producto) => (
-                  <div key={producto.id} className="bg-white p-4 rounded-xl shadow hover:shadow-lg transition">
-                    <img
-                      src={`/img/${producto.imagen}.jfif`}
-                      alt={producto.nombre}
-                      className="w-full h-48 object-cover rounded-lg mb-3"
-                    />
-                    <h2 className="text-xl font-semibold text-gray-700">{producto.nombre}</h2>
-                    <p className="text-gray-600">{producto.descripcion}</p>
-                    <p className="font-bold text-lg">${producto.precio}</p>
-                  </div>
-                ))}
-              </div>
-            </main>)
+      <main className="bg-white min-h-screen">
+
+      <Filtros onChange={setFiltros} />
+      
+      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Productos</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {productosyafiltrados.slice(0, 20).map((producto) => (
+      <div key={producto.id} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
+        <img
+        src={`/img/${producto.imagen}`}
+        alt={producto.nombre}
+        className="w-full h-48 object-cover rounded-md mb-3"
+        />
+        <h2 className="text-xl font-semibold text-gray-700">{producto.nombre}</h2>
+        <p className="text-gray-600">{producto.descripcion}</p>
+        <p className="font-bold text-lg text-purple-600">${producto.precio}</p>
+      </div>
+      ))}
+      </div>
+      </main>
+    );
 }
-export default Product
+export default Products
