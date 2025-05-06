@@ -1,4 +1,5 @@
 // filtroBotones.jsx
+import React from 'react';
 
 export function FiltroBotones({ categorias, onChange }) {
     const handleChangeCategoria = (valor) => {
@@ -8,26 +9,37 @@ export function FiltroBotones({ categorias, onChange }) {
       }));
     };
   
+    const [selectedCategoria, setSelectedCategoria] = React.useState(null);
+
+    const handleClickCategoria = (valor) => {
+      setSelectedCategoria(valor);
+      handleChangeCategoria(valor);
+    };
+
     return (
       <div>
-        <label
-          htmlFor="categoria"
-          className="block text-sm font-medium text-gray-700 mb-1"
+      <label
+        htmlFor="categoria"
+        className="block text-sm font-medium text-gray-700 mb-1"
+      >
+        Categoría
+      </label>
+      <div className="flex gap-2 flex-wrap"></div>
+        {categorias.map(cat => (
+        <button
+          key={cat.valor}
+          onClick={() => handleClickCategoria(cat.valor)}
+          className={`border rounded-lg p-2 focus:ring-2 focus:outline-none ${
+          selectedCategoria === cat.valor
+            ? 'bg-purple-600 text-white border-purple-400'
+            : 'border-gray-300'
+          }`}
         >
-          Categoría
-        </label>
-        <div className="flex gap-2 flex-wrap">
-          {categorias.map(cat => (
-            <button
-              key={cat.valor}
-              onClick={() => handleChangeCategoria(cat.valor)}
-              className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-            >
-              {cat.nombre}
-            </button>
-          ))}
-        </div>
+          {cat.nombre}
+        </button>
+        ))}
       </div>
+      
     );
   }
   

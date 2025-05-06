@@ -3,12 +3,12 @@ const categorias = [
   { valor: "all", nombre: "Todas" },
   { valor: "tecnologia", nombre: "Tecnología" },
   { valor: "hogar", nombre: "Hogar" },
-  { valor: "Celular", nombre: "Celulares" }
+
 ];
 
 
 
-export function Filtros({onChange}) {
+export function Filtros({onChange, ordenarMayorMenor, ordenarMenorMayor, ordenActivo}) {
   const handleChangeminprecio = (e) => {
     onChange(prevState => ({
       ...prevState,
@@ -72,6 +72,34 @@ export function Filtros({onChange}) {
         <FiltroBotones categorias={categorias} onChange={onChange} />
       </div>
       <br />
+      </div> {/* Closing the missing div */}
+      <div className="p-4">
+      <h2 className="text-xl font-semibold mb-4">Ordenar por precio</h2>
+
+      <div className="mb-6">
+        <button
+          onClick={ordenarMayorMenor}
+          className={`px-4 py-2 rounded mr-2 transition ${
+            ordenActivo === "mayor-menor"
+              ? "bg-blue-600 text-white font-bold"
+              : "bg-gray-200 text-gray-800"
+          }`}
+        >
+          Mayor a Menor
+        </button>
+
+        <button
+          onClick={ordenarMenorMayor}
+          className={`px-4 py-2 rounded transition ${
+            ordenActivo === "menor-mayor"
+              ? "bg-blue-600 text-white font-bold"
+              : "bg-gray-200 text-gray-800"
+          }`}
+        >
+          Menor a Mayor
+        </button>
+      </div>
+      
       <div className="mb-4">
         <label
         htmlFor="minprecio"

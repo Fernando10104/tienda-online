@@ -3,6 +3,7 @@ import { Filtros } from './filtros'
 import Fuse from 'fuse.js';
 
 function Products() {
+  
     const [productos, setProductos] = useState([])
 
     useEffect(() => {
@@ -43,10 +44,27 @@ function Products() {
     }
   
     const productosyafiltrados = productosfiltrados(productos)
+    const [ordenActivo, setOrdenActivo] = useState("menor-mayor");
+    const ordenarMayorMenor = () => {
+      const copia = [...productos].sort((a, b) => b.precio - a.precio);
+      setProductos(copia);
+      setOrdenActivo("mayor-menor");
+    };
+  
+    const ordenarMenorMayor = () => {
+      const copia = [...productos].sort((a, b) => a.precio - b.precio);
+      setProductos(copia);
+      setOrdenActivo("menor-mayor");
+    };
+
     return (
       <main className="bg-white min-h-screen">
 
-      <Filtros onChange={setFiltros} />
+      <Filtros onChange={setFiltros}
+      ordenarMenorMayor={ordenarMenorMayor} 
+      ordenarMayorMenor={ordenarMayorMenor}
+      ordenActivo={ordenActivo}
+      />
       
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Productos</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
